@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build:vercel",
+  "rewrites": [
+    { "source": "/pos", "destination": "/index.html" },
+    { "source": "/sales", "destination": "/index.html" },
+    { "source": "/inventory", "destination": "/index.html" },
+    { "source": "/receiving", "destination": "/index.html" },
+    { "source": "/suppliers", "destination": "/index.html" },
+    { "source": "/events", "destination": "/index.html" },
+    { "source": "/team", "destination": "/index.html" },
+    { "source": "/audit", "destination": "/index.html" },
+    { "source": "/settings", "destination": "/index.html" }
+  ]
+}

@@ -22,6 +22,13 @@
       "when": 1793125200001,
       "tag": "0002_event_return_destination",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1793125200002,
+      "tag": "0003_username_password_auth",
+      "breakpoints": true
     }
   ]
 }
