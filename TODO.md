@@ -27,6 +27,13 @@
 - [x] Preserve permission-controlled invoice corrections with original/revised values, actor, timestamp and reason.
 - [x] Keep manual payment records linked to invoices, visibly unconfigured external provider integration, and no live payment calls until Paymob/Cashier setup details are supplied.
 
-## 5. Project handoff
-- [x] Update the README with GitHub import steps, Vercel/TiDB setup, environment-variable names, migrations, demo seeding and the public-demo security limitation.
+## 5. Local Docker Compose setup
+- [x] Add `docker-compose.yml` using Node 22 and MySQL 8.4, with separate named local database/dependency volumes; wait for MySQL health, apply pending migrations on startup, then run the development server.
+- [x] Bind app and database ports to host loopback by default. Use explicitly local-only database passwords and session-signing value; do not point at Manus or Vercel data.
+- [x] Keep demo seeding explicit and document `docker compose exec app pnpm db:seed-demo`; use the guarded seeder instead of automatically resetting local data.
+- [x] Allow optional trusted-LAN testing only through an explicit app-port mapping and a `DRIP_ALLOWED_HOSTS` host allowlist; document that the demo must not be port-forwarded publicly.
+- [x] Remove the Manus network/session-replay collector from the standalone development build so login traffic is not sent to a local debug log endpoint.
+
+## 6. Project handoff
+- [x] Update the README with GitHub import steps, Vercel/TiDB setup, environment-variable names, migrations, demo seeding, Docker Compose local setup and the public-demo security limitation.
 - [x] Create and validate the source ZIP at `/home/ubuntu/Downloads/dripcafe-vercel-demo-20261028.zip`, excluding `.env` files (except the blank `.env.example`), credentials, Git history, build artifacts, and database dumps.

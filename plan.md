@@ -38,6 +38,7 @@ Reuse the existing Figma reference rather than introducing a new visual style. U
 - `drizzle/schema.ts` and `drizzle/` — credentials schema and additive migration.
 - `scripts/seed-demo.ts` — non-destructive setup of fictional role accounts and demo workspace data.
 - `scripts/build-vercel.sh` and `vercel.json` — static asset preparation and Vercel build settings.
+- `docker-compose.yml` — local app and isolated MySQL database, startup migrations, localhost-only ports and persistent local volumes; run the demo seed explicitly.
 - `.env.example` — variable names and blank values only; no secrets.
 
 ## Material constraints

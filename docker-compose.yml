@@ -1,0 +1,60 @@
+# Local development only. Never reuse these passwords or this session secret in production.
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: dripcafe
+      MYSQL_USER: drip
+      MYSQL_PASSWORD: drip_local_demo_password
+      MYSQL_ROOT_PASSWORD: local_only_root_password
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - dripcafe_mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping --host=127.0.0.1 --user=root --password=$$MYSQL_ROOT_PASSWORD --silent",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  app:
+    image: node:22-bookworm-slim
+    working_dir: /app
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: "3000"
+      DATABASE_URL: mysql://drip:drip_local_demo_password@db:3306/dripcafe
+      AUTH_SESSION_SECRET: local-only-do-not-use-outside-compose-dripcafe-demo-2026-10-28
+      DRIP_ALLOWED_HOSTS: ""
+    volumes:
+      - .:/app
+      - dripcafe_node_modules:/app/node_modules
+    # Loopback-only default. See README before intentionally allowing tablet access on a trusted LAN.
+    ports:
+      - "127.0.0.1:3000:3000"
+    command:
+      - sh
+      - -c
+      - >-
+        corepack enable &&
+        corepack prepare pnpm@10.18.0 --activate &&
+        pnpm install --frozen-lockfile --prod=false &&
+        pnpm exec tsx --version &&
+        pnpm db:migrate &&
+        pnpm dev
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+volumes:
+  dripcafe_mysql_data:
+  dripcafe_node_modules:

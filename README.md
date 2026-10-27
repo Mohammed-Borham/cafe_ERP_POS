@@ -80,6 +80,24 @@ The migration creates the application tables and backend-login fields. The one-t
 
 After the migration and seed complete, open the Vercel deployment URL. Choose a role button on the sign-in screen, confirm the username and shared password are filled in, and click **Sign in**. Test the Owner, Admin, Barista and Event Staff accounts on separate devices or browser sessions to compare their backend-enforced access. Vercel will create the production deployment from the configured Git branch; if you changed environment variables after the deployment started, redeploy the latest commit.
 
+## Run locally with Docker Compose
+
+Install Docker Desktop (or Docker Engine with the Compose plugin). From the project root, run:
+
+```bash
+docker compose up -d
+```
+
+The Compose setup starts a private MySQL 8.4 database, waits until it is healthy, applies pending migrations, installs the project dependencies, and starts the app in development mode. First run the guarded fake-data seeder once:
+
+```bash
+docker compose exec app pnpm db:seed-demo
+```
+
+Then open [http://localhost:3000](http://localhost:3000) and use the demo credentials listed above. The app and database are bound to this computer only by default; the Compose credentials and signing secret are for local testing only, not production. If the seed command says the database is not empty, it has refused to overwrite it—do not clear data unless you intend to delete this local demo database.
+
+`docker compose down` stops the containers but keeps the local database volume. `docker compose down -v` deletes the local database and the dependency volume, so the demo data will be lost. To let a tablet on the same trusted Wi-Fi access the app, change the app port mapping to `3000:3000` and set `DRIP_ALLOWED_HOSTS` to the computer's LAN IP; do not port-forward this demo to the public internet.
+
 ## Local checks
 
 ```bash
@@ -88,7 +106,7 @@ pnpm test
 pnpm build:vercel
 ```
 
-For local API work, create a private `.env` from `.env.example`, fill it with a separate test `DATABASE_URL` and a random `AUTH_SESSION_SECRET`, run `pnpm db:migrate` and `pnpm db:seed-demo`, then use `pnpm dev`. Do not point local testing at the Manus database or share the `.env` file.
+Manual alternative without Docker: create a private `.env` from `.env.example`, fill it with a separate test `DATABASE_URL` and a random `AUTH_SESSION_SECRET`, run `pnpm db:migrate` and `pnpm db:seed-demo`, then use `pnpm dev`. Do not point local testing at the Manus database or share the `.env` file.
 
 ## What is not live yet
 
